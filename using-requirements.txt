@@ -1,5 +1,4 @@
 opencv-contrib-python==4.1.0.25
 pandas==0.24.2
 pickleshare==0.7.5
--U scikit-learn
 tensorflow==1.14.0
