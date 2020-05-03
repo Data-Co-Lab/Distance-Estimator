@@ -18,7 +18,7 @@ python3 distance_estimator.py
 ```
 ## 2.How to recreate the project
 ### Data collection
-u would rather just take the data I collected for u bitch
+
 ### The ML model
 Linear regression gave good results for our puposes. We tried both the traditional linear regression and the SVM Support Vector Regression provided by the sklearn library.
 More details in the **AI models** folder.
