@@ -4,16 +4,17 @@ import numpy as np
 import time
 import pickle
 import sklearn
+from tensorflow.keras.models import load_model
 
-estimator = pickle.load(open('Final_estimator.pickle', 'rb')) #Load the distance estimator model.
-
+estimator1 = pickle.load(open('Final_estimator.pickle', 'rb')) #Load the distance estimator model.
+estimator=load_model('MLP_model.h5')
 def Estimate(wid,hei):
     #preprocess the needed data for the ML model
     x_ratio=wid/cols
     y_ratio=hei/rows
-
+    ed= estimator1.predict(np.array([[x_ratio,y_ratio]]))
     e_d= estimator.predict(np.array([[x_ratio,y_ratio]])) #predict the output as estimated distance
-    return e_d
+    return e_d,ed
 
 def make_resolution():
     cap.set(3, 640)
@@ -35,12 +36,14 @@ while True:
     faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=2) #the face detection parameters
 
     for (x, y, w, h) in faces:
-        ed=Estimate(w,h) #Estimate the distance for every face in the frame
+        e_d,ed=Estimate(w,h) #Estimate the distance for every face in the frame
+        e_d[0]=e_d[0]*220
         roi_gray = gray[y:y+h, x:x+w]
         roi_color = frame[y:y, x:x+w]
         Color = (0,0,255) #BGR not RGB !
         font=cv2.FONT_HERSHEY_SIMPLEX
-        cv2.putText(frame, "Estimated D="+str(int(ed[0])), (x,y),font,0.6,(255,255,255),1, cv2.LINE_AA) #print the estimated distance on the frame
+        cv2.putText(frame, "SVM D="+str(int(ed[0])), (x,y),font,0.6,(255,255,255),1, cv2.LINE_AA) #print the estimated distance on the frame
+        cv2.putText(frame, "MLP D="+str(int(e_d[0])), (x,y-22),font,0.6,(255,255,255),1, cv2.LINE_AA)
         width = x+w
         height = y+h
         #print(width,height)
